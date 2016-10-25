@@ -7,6 +7,7 @@ namespace SysInfoReport
     {
         static void Main(string[] args)
         {
+            //get parametrs in string format
             String ProccessorName = getStringParametrs(1, "Name");
             String RAM = (Convert.ToDouble(getStringParametrs(2, "Capacity")) / 1024 / 1024 ).ToString();
             String HD = getStringParametrs(3, "Capacity");
@@ -14,6 +15,7 @@ namespace SysInfoReport
             
             Console.WriteLine(OS);
             Console.ReadLine();
+            
 
         }
 

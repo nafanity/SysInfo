@@ -27,11 +27,11 @@ namespace SysInfoReport
 
 
             var sw = new StreamWriter(Directory.GetCurrentDirectory() + "/report.txt");
-                for(int i = 0; i < head.Count - 1; i++)
+                for(int i = 0; i < head.Count; i++)
                     sw.WriteLine(head[i] + ":  " + record[i]);
 
             sw.Close();
-            Console.ReadLine();
+            Console.WriteLine("OK");
             
 
         }

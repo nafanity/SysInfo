@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using System.Net;
 
 namespace SysInfoReport
 {
@@ -152,6 +153,96 @@ namespace SysInfoReport
             }
 
             return result;
+        }
+
+        static public String getDiskInfo()
+        {
+            var query = "SELECT * FROM Win32_DiskDrive ";
+            String result = "";
+
+            ManagementObjectSearcher searcher =
+                new ManagementObjectSearcher(path, query);
+
+            foreach (var queryObj in searcher.Get())
+            {
+                result += queryObj["Model"];
+            }
+
+            return result;
+        }
+
+        static public String getNetworkAdapterInfo()
+        {
+            var query = "SELECT * FROM Win32_NetworkAdapter where Manufacturer != \"Microsoft\"";
+            String result = "";
+            bool flagNewString = false;
+
+            ManagementObjectSearcher searcher =
+                new ManagementObjectSearcher(path, query);
+
+            foreach (var queryObj in searcher.Get())
+            {
+                if (flagNewString)
+                    result += "\n";
+                String tmp = queryObj["Name"].ToString();
+                if (tmp.Contains("Network Adapter"))
+                {
+                    result += tmp;
+                    result += " ";
+                    result += Math.Round(Convert.ToDouble(queryObj["Speed"]) / 1024 / 1024, 2);
+                    result += " Mbps ";
+                }    
+            }
+
+            return result;
+        }
+
+        static public String getOSInfo()
+        {
+            var query = "SELECT * FROM Win32_OperatingSystem ";
+            String result = "";
+
+            ManagementObjectSearcher searcher =
+                new ManagementObjectSearcher(path, query);
+
+            foreach (var queryObj in searcher.Get())
+            {
+                result += queryObj["Caption"].ToString();
+                result += " ";
+                result += queryObj["OSArchitecture"].ToString();
+                result += "; ";
+                String Date = queryObj["InstallDate"].ToString();
+                Date = Date.Substring(0, 8);
+                Date = Date.Insert(4, "-");
+                Date = Date.Insert(7, "-");
+                result += Date;
+            }
+
+            return result;
+        }
+
+        static public String getUserName()
+        {
+            return Environment.UserName;
+        }
+
+        static public String getIPs()
+        {
+            String result = "";
+            IPHostEntry iphostentry = Dns.GetHostByName(Dns.GetHostName());
+
+            int nIP = 0;
+            foreach (IPAddress ipaddress in iphostentry.AddressList)
+            {
+                result += ipaddress.ToString();
+                result += "\n";
+            }
+            return result;
+        }
+
+        static public String getNetworkName()
+        {
+            return Dns.GetHostName();
         }
     }
 }
